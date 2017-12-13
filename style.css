@@ -2,5 +2,5 @@ p {
     color: red;
 }
 body {
-    background: linear-gradient(-45deg, #35577D, #141E30);
+    background: -webkit-linear-gradient(-45deg, #35577D, #141E30);
 }
