@@ -1,8 +1,6 @@
-p {
-    color: red;
+p, h1, h2, h3 {
+    color: white;
 }
-body {
-    background-color: #141E30;
-    margin: 0;
-    padding: 0;
-}
+
+
+
