@@ -42,17 +42,93 @@
     <title>Covid Case Factors in IL</title>
   </head>
 <h1> How do institution covid rates contribute to overall covid cases and deaths?</h1>  
-<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 
 <div id="my_dataviz3"></div>
 
 <svg width="1000" height="500"></svg>
 <script>
+/*
+var mousemove = function(d) {
+    tooltip
+      .html("County: " + d.county + "<br/>"
+      + "Covid cases: " + d.cases  + "<br/>"
+      + "Covid deaths:" + d.deaths + "<br/>"
+      + "College cases:" + d.college_cases + "<br/>"
+      + "Prison cases:" + d.total_inmate_cases)
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+*/  
+d3.helper = {};
+d3.helper.tooltip = function(){
+    var tooltipDiv;
+    var bodyNode = d3.select('body').node();
+
+    function tooltip(selection){
+
+        selection.on('mouseover.tooltip', function(pD, pI){
+            // Clean up lost tooltips
+            d3.select('body').selectAll('div.tooltip').remove();
+            // Append tooltip
+            tooltipDiv = d3.select('body')
+                           .append('div')
+                           .attr('class', 'tooltip')
+            var absoluteMousePos = d3.mouse(bodyNode);
+            tooltipDiv.style({
+                left: (absoluteMousePos[0] + 10)+'px',
+                top: (absoluteMousePos[1] - 40)+'px',
+                'background-color': '#d8d5e4',
+                width: '100px',
+                height: '70px',
+                padding: '5px',
+                position: 'absolute',
+                'z-index': 1001,
+                'box-shadow': '0 1px 2px 0 #656565'
+            });
+
+            tooltipDiv.html("County: " + pD.county + "<br/>"
+              + "Covid cases: " + pD.cases  + "<br/>"
+              + "Covid deaths:" + pD.deaths + "<br/>"
+              + "College cases:" + pD.college_cases + "<br/>"
+              + "Prison cases:" + pD.total_inmate_cases)
+        })
+        .on('mousemove.tooltip', function(pD, pI){
+            // Move tooltip
+            var absoluteMousePos = d3.mouse(bodyNode);
+            tooltipDiv.style({
+                left: (absoluteMousePos[0] + 10)+'px',
+                top: (absoluteMousePos[1] - 40)+'px'
+            });
+        })
+        .on('mouseout.tooltip', function(pD, pI){
+            // Remove tooltip
+            tooltipDiv.remove();
+        });
+
+    }
+
+    tooltip.attr = function(_x){
+        if (!arguments.length) return attrs;
+        attrs = _x;
+        return this;
+    };
+
+    tooltip.style = function(_x){
+        if (!arguments.length) return styles;
+        styles = _x;
+        return this;
+    };
+
+    return tooltip;
+};
+
 var margin = {top: 100, right: 30, bottom: 30, left: 60},
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
+/*
 var svg = d3.select("#my_dataviz3")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -60,27 +136,30 @@ var svg = d3.select("#my_dataviz3")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
-
+*/
 //Read the data
 d3.csv("data/hydrated_all.csv", function(data) {
   // Add X axis
-  var x = d3.scaleLinear()
+  var x = d3.scale.linear()
     //.domain([0, 1000])
     .domain([0, d3.max(data, function(d) { return Number(d.cases); })])
     .range([ 0, width ]);
-  var xAxis = svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));  
+  var xAxis = d3.svg.axis().scale(x).orient("bottom")
 
   // Add Y axis
-  var y = d3.scaleLinear()
+  var y = d3.scale.linear()
     //.domain([0, 500000])
-    .domain([0, d3.max(data, function(d) { return Number(d.deaths); })])
+    .domain([0, d3.max(data, function(d) { return Number(d.deaths + 1000); })])
     .range([ height, 0]);
-  var yAxis = svg.append("g")
-    .call(d3.axisLeft(y));
+  var yAxis = d3.svg.axis().scale(y).orient("left")
+
+  var brush = d3.svg.brush()
+  .x(x)
+  .on("brush", brushmove)
+  .on("brushend", brushend);  
 
     
+    /*
     var tooltip = d3.select("#my_dataviz3")
     .append("div")
     .style("opacity", 0)
@@ -114,6 +193,8 @@ d3.csv("data/hydrated_all.csv", function(data) {
       .duration(200)
       .style("opacity", 0)
   }
+  
+
 
   var clip = svg.append("defs").append("svg:clipPath")
       .attr("id", "clip")
@@ -131,6 +212,97 @@ d3.csv("data/hydrated_all.csv", function(data) {
   var scatter = svg.append('g')
     .attr("clip-path", "url(#clip)")    
 
+  */
+ 
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("clip-path", "url(#clip)")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+  svg.append("g")
+      .attr("class", "brush")
+      .call(brush)
+    .selectAll('rect')
+      .attr('height', height);
+
+  svg.append("defs").append("clipPath")
+      .attr("id", "clip")
+    .append("rect")
+      .attr("width", width)
+      .attr("height", height + 20);
+  
+  points = svg.selectAll(".point")
+    .data(data)
+    .enter().append("circle")
+    .attr("class", "point")
+    .attr("clip-path", "url(#clip)")
+    .attr("cx", function (d) { return x(Number(d.cases)); } )
+    .attr("cy", function (d) { return y(Number(d.deaths)); } )
+    .attr("r", 4)
+    .style("fill", "#3a158a")
+    .call(d3.helper.tooltip());  
+  
+  function brushmove() {
+    var extent = brush.extent();
+    points.classed("selected", function(d) {
+      is_brushed = extent[0] <= d.index && d.index <= extent[1];
+      return is_brushed;
+  });
+}
+
+function brushend() {
+  get_button = d3.select(".clear-button");
+  if(get_button.empty() === true) {
+    clear_button = svg.append('text')
+      .attr("y", height + 50)
+      .attr("x", width + 50)
+      .attr("class", "clear-button")
+      .text("Clear Brush");
+  }
+
+  //x.domain([ x.invert(brush.extent[0]), x.invert(brush.extent[1]) ])
+  x.domain(brush.extent());
+
+  transition_data();
+  reset_axis();
+
+  points.classed("selected", false);
+  d3.select(".brush").call(brush.clear());
+
+  clear_button.on('click', function(){
+    x.domain([0, d3.max(data, function(d) { return Number(d.cases); })]);
+    transition_data();
+    reset_axis();
+    clear_button.remove();
+  });
+}
+
+function transition_data() {
+  svg.selectAll(".point")
+    .data(data)
+  .transition()
+    .duration(500)
+    .attr("cx", function (d) { return x(Number(d.cases)); } );
+}
+
+function reset_axis() {
+  svg.transition().duration(500)
+   .select(".x.axis")
+   .call(xAxis);
+}  
+
+  /*  
   scatter
   .selectAll("dot")
   .data(data)
@@ -153,6 +325,7 @@ d3.csv("data/hydrated_all.csv", function(data) {
   // A function that set idleTimeOut to null
   var idleTimeout
   function idled() { idleTimeout = null; } 
+  */
 
   // Add dots
   /*
@@ -169,7 +342,7 @@ d3.csv("data/hydrated_all.csv", function(data) {
       //.on("mousemove", mousemove )
       //.on("mouseleave", mouseleave)
       .call(zoom);
-   */
+
   function updateChart() {
 
     extent = d3.event.selection
@@ -192,14 +365,13 @@ d3.csv("data/hydrated_all.csv", function(data) {
       .attr("cx", function (d) { return x(Number(d.cases)); } )
       .attr("cy", function (d) { return y(Number(d.deaths)); } )
   }
+   */
 })
 
-</script>
-<p>
-  Hover over various data points to compare instuition case counts, overall covid case counts, and overall covid deaths.
-</p>
 
-</body>
+</script>
+
+
 <div class="navbar">
     <a href="index.html">Home</a>
     <a href="college.html">Page 1</a>
