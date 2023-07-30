@@ -1,10 +1,29 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+
+.point {
+  fill: #2f225d;
+  stroke: #afa2dc;
+}
+
+.selected {
+  fill: #afa2dc;
+  stroke: #2f225d;
+}
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
+  shape-rendering: crispEdges;
+}
+.clear-button {
+  font: 14px sans-serif;
+  cursor: pointer;
+}
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
   shape-rendering: crispEdges;
 }
 
@@ -79,7 +98,7 @@ d3.helper.tooltip = function(){
                 left: (absoluteMousePos[0] + 10)+'px',
                 top: (absoluteMousePos[1] - 40)+'px',
                 'background-color': '#d8d5e4',
-                width: '100px',
+                width: '110px',
                 height: '70px',
                 padding: '5px',
                 position: 'absolute',
@@ -123,33 +142,26 @@ d3.helper.tooltip = function(){
     return tooltip;
 };
 
-var margin = {top: 100, right: 30, bottom: 30, left: 60},
+var margin = {top: 100, right: 30, bottom: 50, left: 100},
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 // append the svg object to the body of the page
-/*
-var svg = d3.select("#my_dataviz3")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
-*/
 //Read the data
 d3.csv("data/hydrated_all.csv", function(data) {
   // Add X axis
   var x = d3.scale.linear()
-    //.domain([0, 1000])
-    .domain([0, d3.max(data, function(d) { return Number(d.cases); })])
+    .domain([0, d3.max(data, function(d) { 
+      var col = d.college_cases? Number(d.college_cases) : 0;
+      var pri = d.total_inmate_cases? Number(d.total_inmate_cases) : 0;
+      return col + pri + 200;
+    })])
     .range([ 0, width ]);
   var xAxis = d3.svg.axis().scale(x).orient("bottom")
 
   // Add Y axis
   var y = d3.scale.linear()
-    //.domain([0, 500000])
-    .domain([0, d3.max(data, function(d) { return Number(d.deaths + 1000); })])
+    .domain([0, d3.max(data, function(d) { return Number(d.deaths) + 200; })])
     .range([ height, 0]);
   var yAxis = d3.svg.axis().scale(y).orient("left")
 
@@ -157,62 +169,6 @@ d3.csv("data/hydrated_all.csv", function(data) {
   .x(x)
   .on("brush", brushmove)
   .on("brushend", brushend);  
-
-    
-    /*
-    var tooltip = d3.select("#my_dataviz3")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "1px")
-    .style("border-radius", "5px")
-    .style("padding", "10px")  
-  
-    var mouseover = function(d) {
-    tooltip
-      .style("opacity", 1)
-  }
-
-  var mousemove = function(d) {
-    tooltip
-      .html("County: " + d.county + "<br/>"
-      + "Covid cases: " + d.cases  + "<br/>"
-      + "Covid deaths:" + d.deaths + "<br/>"
-      + "College cases:" + d.college_cases + "<br/>"
-      + "Prison cases:" + d.total_inmate_cases)
-      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
-      .style("top", (d3.mouse(this)[1]) + "px")
-  }
-
-  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-  var mouseleave = function(d) {
-    tooltip
-      .transition()
-      .duration(200)
-      .style("opacity", 0)
-  }
-  
-
-
-  var clip = svg.append("defs").append("svg:clipPath")
-      .attr("id", "clip")
-      .append("svg:rect")
-      .attr("width", width )
-      .attr("height", height )
-      .attr("x", 0)
-      .attr("y", 0)
-  
-  var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
-  .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-  .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
-
-  // Create the scatter variable: where both the circles and the brush take place
-  var scatter = svg.append('g')
-    .attr("clip-path", "url(#clip)")    
-
-  */
  
   var svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -229,6 +185,31 @@ d3.csv("data/hydrated_all.csv", function(data) {
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis);
+  
+  svg.append("text")
+    .attr("x", width / 2 )
+    .attr("y", 0)
+    .style("text-anchor", "middle")
+    .attr("font-family", "Optima")
+    .text("COVID: Instituition Cases vs Total Deaths By County");  
+  //x axis label  
+  svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width * .6)
+    .attr("y", height + 40)
+    .attr("font-family", "Optima")
+    .text("Number of College and Prison COVID cases");  
+  // y axis label  
+  svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", 0-(margin.left * .8))
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .attr("font-family", "Optima")
+    .text("Total COVID deaths");    
 
   svg.append("g")
       .attr("class", "brush")
@@ -247,7 +228,11 @@ d3.csv("data/hydrated_all.csv", function(data) {
     .enter().append("circle")
     .attr("class", "point")
     .attr("clip-path", "url(#clip)")
-    .attr("cx", function (d) { return x(Number(d.cases)); } )
+    .attr("cx", function (d) { 
+      var col = d.college_cases? Number(d.college_cases) : x(0);
+      var pri = d.total_inmate_cases? Number(d.total_inmate_cases) : x(0);
+      return x(col + pri); 
+    })
     .attr("cy", function (d) { return y(Number(d.deaths)); } )
     .attr("r", 4)
     .style("fill", "#3a158a")
@@ -265,14 +250,17 @@ function brushend() {
   get_button = d3.select(".clear-button");
   if(get_button.empty() === true) {
     clear_button = svg.append('text')
-      .attr("y", height + 50)
-      .attr("x", width + 50)
+      .attr("y", height + 40)
+      .attr("x", width - 100)
       .attr("class", "clear-button")
       .text("Clear Brush");
+    console.log("Added clear button!")  
   }
 
-  //x.domain([ x.invert(brush.extent[0]), x.invert(brush.extent[1]) ])
   x.domain(brush.extent());
+  console.log(brush.extent())
+  //var extent = x.domain(brush.extent());
+  //x.domain([x.invert(extent[0]), x.invert(extent[1])]);
 
   transition_data();
   reset_axis();
@@ -281,7 +269,12 @@ function brushend() {
   d3.select(".brush").call(brush.clear());
 
   clear_button.on('click', function(){
-    x.domain([0, d3.max(data, function(d) { return Number(d.cases); })]);
+    x.domain([0, d3.max(data, function(d) { 
+      var col = d.college_cases? Number(d.college_cases) : 0;
+      var pri = d.total_inmate_cases? Number(d.total_inmate_cases) : 0;
+      return col + pri + 200;
+    })])
+    //x.domain([0, d3.max(data, function(d) { return Number(d.college_cases); })]);
     transition_data();
     reset_axis();
     clear_button.remove();
@@ -293,7 +286,11 @@ function transition_data() {
     .data(data)
   .transition()
     .duration(500)
-    .attr("cx", function (d) { return x(Number(d.cases)); } );
+    .attr("cx", function (d) { 
+      var col = d.college_cases? Number(d.college_cases) : x(0);
+      var pri = d.total_inmate_cases? Number(d.total_inmate_cases) : x(0);
+      return x(col + pri); 
+    })
 }
 
 function reset_axis() {
@@ -301,71 +298,6 @@ function reset_axis() {
    .select(".x.axis")
    .call(xAxis);
 }  
-
-  /*  
-  scatter
-  .selectAll("dot")
-  .data(data)
-  .enter()
-  .append("circle")
-    .attr("cx", function (d) { return x(Number(d.cases)); } )
-    .attr("cy", function (d) { return y(Number(d.deaths)); } )
-    .attr("r", 6)
-    .style("fill", "#f57e42")
-    // .on("mouseover", mouseover)
-    // .on("mousemove", mousemove )
-    // .on("mouseleave", mouseleave)'
-
-  // Add the brushing
-  scatter
-    .append("g")
-      .attr("class", "brush")
-      .call(brush);
-
-  // A function that set idleTimeOut to null
-  var idleTimeout
-  function idled() { idleTimeout = null; } 
-  */
-
-  // Add dots
-  /*
-  svg.append('g')
-    .selectAll("dot")
-    .data(data)
-    .enter()
-    .append("circle")
-      .attr("cx", function (d) { return x(Number(d.cases)); } )
-      .attr("cy", function (d) { return y(Number(d.deaths)); } )
-      .attr("r", 6)
-      .style("fill", "#f57e42")
-      //.on("mouseover", mouseover)
-      //.on("mousemove", mousemove )
-      //.on("mouseleave", mouseleave)
-      .call(zoom);
-
-  function updateChart() {
-
-    extent = d3.event.selection
-
-    // If no selection, back to initial coordinate. Otherwise, update X axis domain
-    if(!extent){
-      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-      x.domain([0, d3.max(data, function(d) { return Number(d.cases); })])
-
-    }else{
-      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
-      scatter.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    }
-
-    // Update axis and circle position
-    xAxis.transition().duration(1000).call(d3.axisBottom(x))
-    scatter
-      .selectAll("circle")
-      .transition().duration(1000)
-      .attr("cx", function (d) { return x(Number(d.cases)); } )
-      .attr("cy", function (d) { return y(Number(d.deaths)); } )
-  }
-   */
 })
 
 

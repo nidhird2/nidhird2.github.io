@@ -49,7 +49,7 @@
 
 <svg width="1000" height="500"></svg>
 <script>
-var margin = {top: 100, right: 30, bottom: 30, left: 60},
+var margin = {top: 100, right: 30, bottom: 50, left: 100},
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -82,6 +82,32 @@ d3.csv("data/hydrated_colleges2.csv", function(data) {
     .range([ height, 0]);
   svg.append("g")
     .call(d3.axisLeft(y));
+
+  //title
+  svg.append("text")
+    .attr("x", width / 2 )
+    .attr("y", 0)
+    .style("text-anchor", "middle")
+    .attr("font-family", "Optima")
+    .text("COVID: College Cases vs Total Cases By County");  
+  //x axis label  
+  svg.append("text")
+    .attr("class", "x label")
+    .attr("text-anchor", "end")
+    .attr("x", width * .6)
+    .attr("y", height + 40)
+    .attr("font-family", "Optima")
+    .text("Number of college COVID cases");  
+  // y axis label  
+  svg.append("text")
+    .attr("class", "y label")
+    .attr("text-anchor", "middle")
+    .attr("y", 0-(margin.left * .8))
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .attr("font-family", "Optima")
+    .text("Total COVID cases");  
 
     var tooltip = d3.select("#my_dataviz")
     .append("div")
