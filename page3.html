@@ -41,7 +41,7 @@
     <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet">
     <title>Covid Case Factors in IL</title>
   </head>
-<h1> How do instituion covid rates contribute to overall covid cases and deaths?</h1>  
+<h1> How do institution covid rates contribute to overall covid cases and deaths?</h1>  
 <script src="https://d3js.org/d3.v4.min.js"></script>
 
 <div id="my_dataviz3"></div>
@@ -63,28 +63,24 @@ var svg = d3.select("#my_dataviz3")
 
 //Read the data
 d3.csv("data/hydrated_all.csv", function(data) {
-
-  y_max = d3.max(data, function(d) { return Number(d.cases); });
-  console.log(y_max); 
-
-
   // Add X axis
   var x = d3.scaleLinear()
     //.domain([0, 1000])
     .domain([0, d3.max(data, function(d) { return Number(d.cases); })])
     .range([ 0, width ]);
-  svg.append("g")
+  var xAxis = svg.append("g")
     .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x));  
 
   // Add Y axis
   var y = d3.scaleLinear()
     //.domain([0, 500000])
     .domain([0, d3.max(data, function(d) { return Number(d.deaths); })])
     .range([ height, 0]);
-  svg.append("g")
+  var yAxis = svg.append("g")
     .call(d3.axisLeft(y));
 
+    
     var tooltip = d3.select("#my_dataviz3")
     .append("div")
     .style("opacity", 0)
@@ -117,9 +113,49 @@ d3.csv("data/hydrated_all.csv", function(data) {
       .transition()
       .duration(200)
       .style("opacity", 0)
-  }  
+  }
+
+  var clip = svg.append("defs").append("svg:clipPath")
+      .attr("id", "clip")
+      .append("svg:rect")
+      .attr("width", width )
+      .attr("height", height )
+      .attr("x", 0)
+      .attr("y", 0)
+  
+  var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+  .extent( [ [0,0], [width,height] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+  .on("end", updateChart) // Each time the brush selection changes, trigger the 'updateChart' function
+
+  // Create the scatter variable: where both the circles and the brush take place
+  var scatter = svg.append('g')
+    .attr("clip-path", "url(#clip)")    
+
+  scatter
+  .selectAll("dot")
+  .data(data)
+  .enter()
+  .append("circle")
+    .attr("cx", function (d) { return x(Number(d.cases)); } )
+    .attr("cy", function (d) { return y(Number(d.deaths)); } )
+    .attr("r", 6)
+    .style("fill", "#f57e42")
+    // .on("mouseover", mouseover)
+    // .on("mousemove", mousemove )
+    // .on("mouseleave", mouseleave)'
+
+  // Add the brushing
+  scatter
+    .append("g")
+      .attr("class", "brush")
+      .call(brush);
+
+  // A function that set idleTimeOut to null
+  var idleTimeout
+  function idled() { idleTimeout = null; } 
 
   // Add dots
+  /*
   svg.append('g')
     .selectAll("dot")
     .data(data)
@@ -129,10 +165,33 @@ d3.csv("data/hydrated_all.csv", function(data) {
       .attr("cy", function (d) { return y(Number(d.deaths)); } )
       .attr("r", 6)
       .style("fill", "#f57e42")
-      .on("mouseover", mouseover)
-      .on("mousemove", mousemove )
-      .on("mouseleave", mouseleave)
+      //.on("mouseover", mouseover)
+      //.on("mousemove", mousemove )
+      //.on("mouseleave", mouseleave)
+      .call(zoom);
+   */
+  function updateChart() {
 
+    extent = d3.event.selection
+
+    // If no selection, back to initial coordinate. Otherwise, update X axis domain
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+      x.domain([0, d3.max(data, function(d) { return Number(d.cases); })])
+
+    }else{
+      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
+      scatter.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
+    }
+
+    // Update axis and circle position
+    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+    scatter
+      .selectAll("circle")
+      .transition().duration(1000)
+      .attr("cx", function (d) { return x(Number(d.cases)); } )
+      .attr("cy", function (d) { return y(Number(d.deaths)); } )
+  }
 })
 
 </script>
