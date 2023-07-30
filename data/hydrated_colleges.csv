@@ -1,0 +1,52 @@
+date_x,state_x,county,city,ipeds_id,college,cases_x,cases_2021,notes,date_y,state_y,fips,cases_y,deaths
+2021-05-26,Illinois,Rock Island,Rock Island,143084,Augustana College,260,126.0,,2020-12-31,Illinois,17161.0,11014,259.0
+2021-05-26,Illinois,Kane,Aurora,143118,Aurora University,166,65.0,,2020-12-31,Illinois,17089.0,41511,604.0
+2021-05-26,Illinois,DuPage,Lisle,145619,Benedictine University,82,37.0,,2020-12-31,Illinois,17043.0,61805,1030.0
+2021-05-26,Illinois,DuPage,Elmhurst,144962,Elmhurst University,269,99.0,,2020-12-31,Illinois,17043.0,61805,1030.0
+2021-05-26,Illinois,DuPage,Downers Grove,143853,Midwestern University at Downers Grove,171,66.0,,2020-12-31,Illinois,17043.0,61805,1030.0
+2021-05-26,Illinois,DuPage,Naperville,147660,North Central College,394,138.0,,2020-12-31,Illinois,17043.0,61805,1030.0
+2021-05-26,Illinois,DuPage,Wheaton,149781,Wheaton College,158,102.0,,2020-12-31,Illinois,17043.0,61805,1030.0
+2021-05-26,Illinois,Macoupin,Carlinville,143288,Blackburn College,0,,,2020-12-31,Illinois,17117.0,3273,79.0
+2021-05-26,Illinois,Peoria,Peoria,143358,Bradley University,565,136.0,,2020-12-31,Illinois,17143.0,13172,201.0
+2021-05-26,Illinois,Cook,Chicago,144005,Chicago State University,116,45.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,144281,Columbia College Chicago,157,86.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,River Forest,144351,Concordia University Chicago,97,34.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,144740,DePaul University,77,27.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,River Forest,148496,Dominican University,237,86.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,University Park,145336,Governors State University,82,27.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,145725,Illinois Institute of Technology,204,64.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,146719,Loyola University Chicago,634,419.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,147369,Moody Bible Institute,135,53.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,147679,North Park University,230,73.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,147776,Northeastern Illinois University,269,80.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Evanston,147767,Northwestern University,1278,645.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,148627,Saint Xavier University,312,101.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,143048,School of the Art Institute of Chicago,73,25.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,144050,University of Chicago,637,166.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Cook,Chicago,145600,University of Illinois at Chicago,1743,523.0,,2020-12-31,Illinois,17031.0,393652,8285.0
+2021-05-26,Illinois,Coles,Charleston,144892,Eastern Illinois University,669,192.0,,2020-12-31,Illinois,17029.0,4294,71.0
+2021-05-26,Illinois,Coles,Mattoon,146506,Lake Land College,133,39.0,,2020-12-31,Illinois,17029.0,4294,71.0
+2021-05-26,Illinois,Woodford,Eureka,144971,Eureka College,71,26.0,,2020-12-31,Illinois,17203.0,2818,58.0
+2021-05-26,Illinois,Bond,Greenville,145372,Greenville University,205,101.0,,2020-12-31,Illinois,17005.0,1554,16.0
+2021-05-26,Illinois,Morgan,Jacksonville,145691,Illinois College,129,57.0,,2020-12-31,Illinois,17137.0,3060,82.0
+2021-05-26,Illinois,McLean,Normal,145813,Illinois State University,2433,481.0,,2020-12-31,Illinois,17113.0,11621,115.0
+2021-05-26,Illinois,McLean,Bloomington,145646,Illinois Wesleyan University,268,55.0,,2020-12-31,Illinois,17113.0,11621,115.0
+2021-05-26,Illinois,Clinton,Centralia,146366,Kaskaskia College,129,20.0,,2020-12-31,Illinois,17027.0,4485,80.0
+2021-05-26,Illinois,Knox,Galesburg,146427,Knox College,78,30.0,,2020-12-31,Illinois,17095.0,4059,126.0
+2021-05-26,Illinois,Lake,Lake Forest,146481,Lake Forest College,80,72.0,,2020-12-31,Illinois,17097.0,48300,818.0
+2021-05-26,Illinois,Will,Romeoville,146612,Lewis University,360,97.0,,2020-12-31,Illinois,17197.0,52293,780.0
+2021-05-26,Illinois,St. Clair,Lebanon,147013,McKendree University,264,67.0,,2020-12-31,Illinois,17163.0,20854,353.0
+2021-05-26,Illinois,St. Clair,Belleville,143215,Southwestern Illinois College,0,,,2020-12-31,Illinois,17163.0,20854,353.0
+2021-05-26,Illinois,Macon,Decatur,147244,Millikin University,268,85.0,,2020-12-31,Illinois,17115.0,7959,170.0
+2021-05-26,Illinois,Warren,Monmouth,147341,Monmouth College,64,13.0,College did not clarify whether data includes duplicate cases.,2020-12-31,Illinois,17187.0,1496,36.0
+2021-05-26,Illinois,Kankakee,Bourbonnais,147828,Olivet Nazarene University,189,119.0,,2020-12-31,Illinois,17091.0,10717,159.0
+2021-05-26,Illinois,Champaign,Champaign,147916,Parkland College,323,124.0,,2020-12-31,Illinois,17019.0,13839,88.0
+2021-05-26,Illinois,Champaign,Champaign,145637,University of Illinois Urbana-Champaign,6766,2123.0,,2020-12-31,Illinois,17019.0,13839,88.0
+2021-05-26,Illinois,Jersey,Elsah,148016,Principia College,9,4.0,,2020-12-31,Illinois,17083.0,1972,42.0
+2021-05-26,Illinois,Adams,Quincy,148131,Quincy University,277,9.0,,2020-12-31,Illinois,17001.0,6582,82.0
+2021-05-26,Illinois,Winnebago,Rockford,148405,Rockford University,85,,,2020-12-31,Illinois,17201.0,24019,373.0
+2021-05-26,Illinois,Saline,Harrisburg,148937,Southeastern Illinois College,69,27.0,,2020-12-31,Illinois,17165.0,1764,40.0
+2021-05-26,Illinois,Jackson,Carbondale,149222,Southern Illinois University Carbondale,379,116.0,,2020-12-31,Illinois,17077.0,3650,60.0
+2021-05-26,Illinois,Madison,Edwardsville,149231,Southern Illinois University Edwardsville,472,160.0,,2020-12-31,Illinois,17119.0,21054,389.0
+2021-05-26,Illinois,Sangamon,Springfield,148654,University of Illinois Springfield,273,96.0,,2020-12-31,Illinois,17167.0,13219,197.0
+2021-05-26,Illinois,McDonough,Macomb,149772,Western Illinois University,360,68.0,,2020-12-31,Illinois,17109.0,1978,46.0

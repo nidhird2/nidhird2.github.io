@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: #000;
+}
+.tooltip {
+            position: absolute;
+            font-size: 12px;
+            width:  auto;
+            height: auto;
+            pointer-events: none;
+			background: white;
+			border: 1px black;
+			color: black;
+        }    
+        body {
+        margin: 0;
+        padding: 0; }
+        h1 { 
+          color : black;
+          font-family: 'Barlow', sans-serif;
+          text-align: center;
+        }
+        p {
+          color : black;
+          font-family: 'Barlow', sans-serif;
+          text-align: center;
+          font-size: 18px;
+        }
+</style>
+<head>
+    <link rel="stylesheet" type="text/css" href="css/viz.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Barlow" rel="stylesheet">
+    <title>Covid by Prison, County in IL</title>
+  </head>
+  <h1> How have prisons contributed to COVID in Illinois?</h1>
+  <br>
+  <br>  
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<div id="my_dataviz2"></div>
+
+<svg width="1000" height="500"></svg>
+<script>
+var margin = {top: 100, right: 30, bottom: 30, left: 60},
+    width = 1000 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz2")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+d3.csv("data/hydrated_prisons.csv", function(data) {
+
+  y_max = d3.max(data, function(d) { return Number(d.cases); });
+  console.log(y_max); 
+
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    //.domain([0, 1000])
+    .domain([0, d3.max(data, function(d) { return Number(d.inmate_cases); })])
+    .range([ 0, width ]);
+  svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    //.domain([0, 500000])
+    .domain([0, d3.max(data, function(d) { return Number(d.cases); })])
+    .range([ height, 0]);
+  svg.append("g")
+    .call(d3.axisLeft(y));
+
+    var tooltip = d3.select("#my_dataviz2")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")  
+  
+    var mouseover = function(d) {
+    tooltip
+      .style("opacity", 1)
+  }
+
+  var mousemove = function(d) {
+    tooltip
+      .html("County: " + d.county + "<br/>"
+      + "Inmate cases: " + d.inmate_cases  + "<br/>"
+      + "Total Covid cases:" + d.cases)
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var mouseleave = function(d) {
+    tooltip
+      .transition()
+      .duration(200)
+      .style("opacity", 0)
+  }  
+
+  // Add dots
+  svg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+      .attr("cx", function (d) { return x(Number(d.inmate_cases)); } )
+      .attr("cy", function (d) { return y(Number(d.cases)); } )
+      .attr("r", 6)
+      .style("fill", "#a7f542")
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove )
+      .on("mouseleave", mouseleave)
+
+})
+
+</script>
+<p>
+  Are you surprised by the data? Only Chicago had a high number of prison covid cases.
+</p>
+
+</body>
+<div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="college.html">Page 1</a>
+    <a href="prison.html" class="active">Page 2</a>
+    <a href="page3.html">Page 3</a>
+    <a href="page4.html">Page 4</a>
+</div>
