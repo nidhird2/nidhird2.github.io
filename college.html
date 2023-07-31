@@ -45,11 +45,12 @@
   <br>
   <br>
 <script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 <div id="my_dataviz"></div>
 
 <svg width="1000" height="500"></svg>
 <script>
-var margin = {top: 100, right: 30, bottom: 50, left: 100},
+var margin = {top: 100, right: 100, bottom: 50, left: 100},
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
@@ -156,6 +157,56 @@ d3.csv("data/hydrated_colleges2.csv", function(data) {
       .on("mouseleave", mouseleave)
 
 })
+
+const annotations = [
+{
+    note: {
+      title: "University of Illinois at Urbana-Champaign",
+      label: "Champaign County",
+      //padding: 10
+      wrap: 200
+    },
+    x: width + 90,
+    y: 430,
+    dy: -50,
+    dx: -80,
+    type: d3.annotationCalloutElbow
+  },
+  {
+    note: {
+      title: "Illinois State University",
+      label: "McClean County",
+      //padding: 10
+      wrap: 200
+    },
+    x: width / 2 + 5,
+    y: 430,
+    dy: -150,
+    dx: 100,
+    type: d3.annotationCalloutElbow
+  },
+  {
+    note: {
+      title: "Eastern Illinois University",
+      label: "Coles County",
+      //padding: 10
+      wrap: 200
+    },
+    x: width / 4 + 5,
+    y: 430,
+    dy: -100,
+    dx: 100,
+    type: d3.annotationCallout
+  }
+]
+
+// Add annotation to the chart
+const makeAnnotations = d3.annotation()
+  .annotations(annotations)
+d3.select("svg")
+  .append("g")
+  .attr("class", "annotation-group")
+  .call(makeAnnotations)
 
 </script>
 
