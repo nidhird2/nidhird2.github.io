@@ -238,8 +238,9 @@ d3.csv("data/hydrated_all.csv", function(data) {
       return x(col + pri); 
     })
     .attr("cy", function (d) { return y(Number(d.deaths)); } )
-    .attr("r", 4)
-    .style("fill", "#3a158a")
+    .attr("r", 8)
+    .style("stroke", "#3a158a")
+    .style("fill", "#7b58db")
     .call(d3.helper.tooltip());  
   
   function brushmove() {

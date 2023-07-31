@@ -148,8 +148,9 @@ d3.csv("data/hydrated_prisons.csv", function(data) {
     .append("circle")
       .attr("cx", function (d) { return x(Number(d.inmate_cases)); } )
       .attr("cy", function (d) { return y(Number(d.cases)); } )
-      .attr("r", 6)
-      .style("fill", "#a7f542")
+      .attr("r", 8)
+      .style("fill", "#3568f2")
+      .style("stroke", "#070938")
       .on("mouseover", mouseover)
       .on("mousemove", mousemove )
       .on("mouseleave", mouseleave)
@@ -159,7 +160,7 @@ d3.csv("data/hydrated_prisons.csv", function(data) {
 const annotations = [
 {
     note: {
-      title: "Cook county",
+      title: "Cook County",
       label: "Most populous county in IL",
       //padding: 10
       wrap: 200
